@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Simulados - Polícia Civil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --gold: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --border: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent: #1d4ed8;
+            --accent-hover: #1e40af;
+            --gold: #d97706;
+            --success: #059669;
+            --error: #dc2626;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .badge-badge {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-theme {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-theme:hover {
+            border-color: var(--accent);
+        }
+
+        /* Layout Main */
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Stats & Header Info */
+        .top-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .timer-value {
+            color: var(--gold);
+            font-family: monospace;
+            font-size: 1.6rem;
+        }
+
+        /* Filter Controls */
+        .controls-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        select {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Question Box */
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .discipline-tag {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .question-num {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .option-item.selected {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--text-primary);
+        }
+
+        .option-item.wrong {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--text-primary);
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Navigation Buttons */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Result View */
+        .results-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .results-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        .results-rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 1rem; }
+            .container { padding: 0 1rem; }
+            .question-card { padding: 1.25rem; }
+            .actions-bar { flex-direction: column-reverse; width: 100%; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <div class="logo">
+            <span class="badge-badge">PC-SP</span>
+            <span>SIMULADOS POLÍCIA CIVIL</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span> <span id="themeText">Escuro</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard / Bar Topo -->
+        <div class="top-bar">
+            <div class="stat-card">
+                <span class="stat-title">Tempo Decorrido</span>
+                <span class="stat-value timer-value" id="timer">00:00</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Progresso</span>
+                <span class="stat-value" id="progressText">1 de 5</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Aproveitamento</span>
+                <span class="stat-value" id="accuracyText">0%</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Nível Atual</span>
+                <span class="stat-value" id="userRank" style="color: var(--gold); font-size: 1.1rem; margin-top: 4px;">Investigador Aprendiz</span>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="controls-card">
+            <div class="filter-group">
+                <span class="filter-label">Disciplina:</span>
+                <select id="disciplineFilter" onchange="filterQuestions()">
+                    <option value="todos">Todas as Matérias</option>
+                    <option value="Direito Penal">Direito Penal</option>
+                    <option value="Direito Processual Penal">Direito Processual Penal</option>
+                    <option value="Direito Administrativo">Direito Administrativo</option>
+                    <option value="Língua Portuguesa">Língua Portuguesa</option>
+                    <option value="Raciocínio Lógico">Raciocínio Lógico</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="resetSimulado()" style="padding: 8px 16px; font-size: 0.85rem;">Reiniciar Simulado</button>
+        </div>
+
+        <!-- Área do Simulado -->
+        <div id="quizContainer">
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="discipline-tag" id="discTag">Direito Penal</span>
+                    <span class="question-num" id="qNum">Questão 1</span>
+                </div>
+                
+                <div class="question-text" id="qText">Carregando questão...</div>
+
+                <div class="options-list" id="optionsContainer">
+                    <!-- Opções geradas dinamicamente -->
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">💡 Justificativa Legal / Gabarito</div>
+                    <div id="explanationText"></div>
+                </div>
+            </div>
+
+            <div class="actions-bar">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>← Anterior</button>
+                <button class="btn btn-primary" id="confirmBtn" onclick="confirmAnswer()">Responder</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display: none;">Próxima →</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultados (Fim do Simulado) -->
+        <div class="results-card" id="resultsCard">
+            <h2>Simulado Concluído! 🎯</h2>
+            <p style="color: var(--text-secondary); margin-top: 8px;">Confira o seu desempenho na prova de treinamento:</p>
+
+            <div class="results-score" id="finalScore">0 / 5</div>
+            <div class="results-rank" id="finalRank">Patente: Agente de Polícia</div>
+
+            <p id="finalFeedback" style="line-height: 1.6; max-width: 600px; margin: 0 auto 2rem auto;"></p>
+
+            <button class="btn btn-primary" onclick="resetSimulado()">Tentar Novamente</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Portal de Simulados Polícia Civil &copy; 2026 — Plataforma de Preparação de Alto Desempenho</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            {
+                id: 1,
+                discipline: "Direito Penal",
+                question: "Qual é o prazo máximo de duração da prisão temporária, prorrogável por igual período, em casos de crimes hediondos, de acordo com a Lei nº 7.960/1989 e a Lei nº 8.072/1990?",
+                options: [
+                    "5 dias.",
+                    "10 dias.",
+                    "15 dias.",
+                    "30 dias.",
+                    "60 dias."
+                ],
+                correct: 3, // D (30 dias)
+                explanation: "Gabarito: **D (30 dias)**. Segundo o art. 2º, § 4º, da Lei nº 8.072/1990 (Lei dos Crimes Hediondos), a prisão temporária terá a duração de 30 dias, prorrogável por igual período em caso de extrema e comprovada necessidade."
+            },
+            {
+                id: 2,
+                discipline: "Direito Processual Penal",
+                question: "Considerando o Código de Processo Penal brasileiro, assinale a alternativa correta sobre o inquérito policial:",
+                options: [
+                    "O inquérito policial é indispensável para o oferecimento da denúncia pelo Ministério Público.",
+                    "É vedado ao delegado de polícia o arquivamento do inquérito policial.",
+                    "O sigilo do inquérito policial se estende integralmente aos advogados constituídos do investigado.",
+                    "O prazo para conclusão do inquérito policial, estando o indiciado preso, é improrrogável de 30 dias.",
+                    "A autoridade policial não poderá proceder à reprodução simulada dos fatos em hipótese alguma."
+                ],
+                correct: 1, // B
+                explanation: "Gabarito: **B**. Conforme o art. 17 do CPP, a autoridade policial não poderá determinar o arquivamento dos autos do inquérito. O arquivamento é ato exclusivo do Poder Judiciário a requerimento do Ministério Público."
+            },
+            {
+                id: 3,
+                discipline: "Direito Administrativo",
+                question: "No tocante aos poderes administrativos, o poder conferido à Administração Pública para aplicar sanções e penalidades aos seus servidores ou a particulares sujeitos à disciplina interna denomina-se:",
+                options: [
+                    "Poder Regulamentar.",
+                    "Poder Hierárquico.",
+                    "Poder Disciplinar.",
+                    "Poder de Polícia.",
+                    "Poder Vinculado."
+                ],
+                correct: 2, // C
+                explanation: "Gabarito: **C (Poder Disciplinar)**. O Poder Disciplinar é a faculdade de punir as infrações funcionais dos servidores e demais pessoas sujeitas à disciplina dos órgãos e serviços da Administração."
+            },
+            {
+                id: 4,
+                discipline: "Língua Portuguesa",
+                question: "Assinale a alternativa em que o uso do sinal indicativo de crase está INCORRETO:",
+                options: [
+                    "Referiu-se à questão com bastante clareza.",
+                    "Chegaram à casa dos pais muito cedo.",
+                    "Os candidatos devem se apresentar às oito horas.",
+                    "Dirigiu-se à ela com total respeito e urbanidade.",
+                    "Entregou o documento à secretária do diretor."
+                ],
+                correct: 3, // D
+                explanation: "Gabarito: **D**. Não ocorre crase antes de pronomes pessoais ('ela'). O correto seria: 'Dirigiu-se a ela com total respeito'."
+            },
+            {
+                id: 5,
+                discipline: "Raciocínio Lógico",
+                question: "Se todo policial é dedicado e alguns dedicados são corajosos, pode-se afirmar com certeza lógica que:",
+                options: [
+                    "Todo policial é corajoso.",
+                    "Alguns policiais são corajosos.",
+                    "Ninguém que é corajoso é policial.",
+                    "Alguns dedicados não são policiais.",
+                    "Nenhuma das alternativas anteriores traz uma conclusão válida e necessária."
+                ],
+                correct: 4, // E
+                explanation: "Gabarito: **E**. Os conjuntos de 'policiais' e 'corajosos' estão ambos contidos/interceptados pelo conjunto 'dedicados', mas não há garantia de intersecção direta entre policiais e corajosos. Portanto, nada se pode afirmar com certeza absoluta."
+            }
+        ];
+
+        let filteredQuestions = [...allQuestions];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let timerInterval;
+        let secondsElapsed = 0;
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const q = filteredQuestions[currentIndex];
+            document.getElementById('discTag').innerText = q.discipline;
+            document.getElementById('qNum').innerText = `Questão ${currentIndex + 1} de ${filteredQuestions.length}`;
+            document.getElementById('qText').innerText = q.question;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D', 'E'];
+            const answered = userAnswers[q.id] !== undefined;
+
+            q.options.forEach((optText, i) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option-item';
+                if (answered) {
+                    optDiv.classList.add('disabled');
+                    if (i === q.correct) optDiv.classList.add('correct');
+                    else if (i === userAnswers[q.id]) optDiv.classList.add('wrong');
+                } else if (userAnswers['temp_' + q.id] === i) {
+                    optDiv.classList.add('selected');
+                }
+
+                optDiv.onclick = () => {
+                    if (answered) return;
+                    userAnswers['temp_' + q.id] = i;
+                    loadQuestion();
+                };
+
+                optDiv.innerHTML = `
+                    <div class="option-prefix">${prefixes[i]}</div>
+                    <div class="option-text">${optText}</div>
+                `;
+                optionsContainer.appendChild(optDiv);
+            });
+
+            // Gerenciar botões e explicação
+            const expBox = document.getElementById('explanationBox');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+
+            prevBtn.disabled = currentIndex === 0;
+
+            if (answered) {
+                expBox.style.display = 'block';
+                document.getElementById('explanationText').innerHTML = q.explanation;
+                confirmBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-flex';
+                nextBtn.innerText = (currentIndex === filteredQuestions.length - 1) ? "Finalizar Simulado 🏁" : "Próxima →";
+            } else {
+                expBox.style.display = 'none';
+                confirmBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'none';
+            }
+
+            updateStats();
+        }
+
+        function confirmAnswer() {
+            const q = filteredQuestions[currentIndex];
+            const tempSelected = userAnswers['temp_' + q.id];
+            if (tempSelected === undefined) {
+                alert("Por favor, selecione uma alternativa antes de responder.");
+                return;
+            }
+            userAnswers[q.id] = tempSelected;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentIndex < filteredQuestions.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                loadQuestion();
+            }
+        }
+
+        function updateStats() {
+            let total = filteredQuestions.length;
+            document.getElementById('progressText').innerText = `${currentIndex + 1} de ${total}`;
+
+            let answeredCount = 0;
+            let correctCount = 0;
+
+            filteredQuestions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    answeredCount++;
+                    if (userAnswers[q.id] === q.correct) correctCount++;
+                }
+            });
+
+            let accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+            document.getElementById('accuracyText').innerText = `${accuracy}%`;
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsCard').style.display = 'block';
+
+            let correctCount = 0;
+            filteredQuestions.forEach(q => {
+                if (userAnswers[q.id] === q.correct) correctCount++;
+            });
+
+            const total = filteredQuestions.length;
+            const scorePercent = (correctCount / total) * 100;
+
+            document.getElementById('finalScore').innerText = `${correctCount} / ${total}`;
+
+            let rank = "Recruta de Polícia";
+            let feedback = "Continue estudando e praticando! A constância é a chave para a aprovação.";
+
+            if (scorePercent === 100) {
+                rank = "Delegado Titular 🏆";
+                feedback = "Excelente! Desempenho impecável. Você dominou todas as disciplinas deste simulado!";
+            } else if (scorePercent >= 80) {
+                rank = "Investigador Sênior ⭐";
+                feedback = "Ótimo resultado! Você está muito bem preparado. Ajuste apenas os pequenos detalhes!";
+            } else if (scorePercent >= 60) {
+                rank = "Agente de Polícia 🚓";
+                feedback = "Bom trabalho! Teve um aproveitamento sólido, mas vale a pena revisar as questões que errou.";
+            }
+
+            document.getElementById('finalRank').innerText = `Patente Atingida: ${rank}`;
+            document.getElementById('finalFeedback').innerText = feedback;
+        }
+
+        function filterQuestions() {
+            const disc = document.getElementById('disciplineFilter').value;
+            if (disc === "todos") {
+                filteredQuestions = [...allQuestions];
+            } else {
+                filteredQuestions = allQuestions.filter(q => q.discipline === disc);
+            }
+            currentIndex = 0;
+            loadQuestion();
+        }
+
+        function resetSimulado() {
+            userAnswers = {};
+            currentIndex = 0;
+            secondsElapsed = 0;
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsCard').style.display = 'none';
+            startTimer();
+            loadQuestion();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                icon.innerText = '☀️';
+                text.innerText = 'Claro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.innerText = '🌙';
+                text.innerText = 'Escuro';
+            }
+        }
+
+        // Inicializar
+        startTimer();
+        loadQuestion();
+    </script>
+</body>
+</html>
